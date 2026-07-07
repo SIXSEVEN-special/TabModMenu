@@ -8,46 +8,31 @@ on:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - name: Windows
-            os: windows-latest
-          - name: macOS
-            os: macos-latest
-          - name: iOS
-            os: macos-latest
-            target: iOS
-          - name: Android32
-            os: ubuntu-latest
-            target: Android32
-          - name: Android64
-            os: ubuntu-latest
-            target: Android64
-
-    name: '${{ matrix.config.name }}'
-    runs-on: '${{ matrix.config.os }}'
+    name: Windows Build
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build Mod
-        uses: geode-sdk/build-geode-mod@main
-        with:
-          combine: true
-          target: '${{ matrix.config.target }}'
+      - name: Install Geode CLI
+        run: |
+          bgexec iwr -Uri "https://github.com/geode-sdk/cli/releases/latest/download/geode-cli-win.zip" -OutFile "geode-cli.zip"
+          Expand-Archive -Path "geode-cli.zip" -DestinationPath "${env:USERPROFILE}\.geode\bin" -Force
+          echo "${env:USERPROFILE}\.geode\bin" >> $env:GITHUB_PATH
+        shell: pwsh
 
-  package:
-    name: Package builds
-    runs-on: ubuntu-latest
-    needs: ['build']
+      - name: Install Geode SDK Binaries
+        run: |
+          geode sdk install
+        shell: pwsh
 
-    steps:
-      - uses: geode-sdk/build-geode-mod/combine@main
-        id: build
+      - name: Configure CMake
+        run: |
+          # Manually exposing the installation path directly to CMake prevents the module path error
+          cmake -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH="${env:USERPROFILE}\.geode\sdk"
+        shell: pwsh
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Build Output
-          path: '${{ steps.build.outputs.build-output }}'
+      - name: Build Mod Binaries
+        run: |
+          cmake --build build --config Release
+        shell: pwsh

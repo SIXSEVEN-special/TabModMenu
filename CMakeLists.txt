@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.13)
-
 project(TabModMenu)
 
 find_package(Geode REQUIRED)
 
-# The EXTERNALS keyword explicitly stops the compiler from trying to check an online index
 setup_geode_mod(TabModMenu EXTERNALS geode.loader)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
