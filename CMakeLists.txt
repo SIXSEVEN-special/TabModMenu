@@ -1,17 +1,11 @@
 cmake_minimum_required(VERSION 3.13)
 
-# Force compatibility fallback for older Geode/TulipHook sub-packages
-set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
-
 project(TabModMenu)
-
-include(FetchContent)
 
 find_package(Geode REQUIRED)
 
-# Explicitly bypasses the online index lookups to prevent the geode.loader crash
+# This is the exact community standard way to bypass the index check for the loader
 setup_geode_mod(TabModMenu EXTERNALS geode.loader:3.8.0)
 
-# Automatically finds and links ALL .cpp source files inside your src/ folder
 file(GLOB_RECURSE SOURCES src/*.cpp)
 target_sources(TabModMenu PRIVATE ${SOURCES})

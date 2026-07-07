@@ -29,13 +29,10 @@ jobs:
     name: '${{ matrix.config.name }}'
     runs-on: '${{ matrix.config.os }}'
 
-    env:
-      CMAKE_POLICY_VERSION_MINIMUM: "3.5"
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build the mod
+      - name: Build Mod
         uses: geode-sdk/build-geode-mod@main
         with:
           combine: true
