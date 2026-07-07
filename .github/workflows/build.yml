@@ -31,10 +31,13 @@ jobs:
 
     env:
       CMAKE_POLICY_VERSION_MINIMUM: "3.5"
-      GEODE_OFFLINE: "1"
 
     steps:
       - uses: actions/checkout@v4
+
+      # Manually set up the official Geode CLI step to avoid dependency checks failing
+      - name: Setup Geode CLI
+        uses: geode-sdk/setup-cli@main
 
       - name: Build the mod
         uses: geode-sdk/build-geode-mod@main
@@ -55,4 +58,3 @@ jobs:
         with:
           name: Build Output
           path: '${{ steps.build.outputs.build-output }}'
-
