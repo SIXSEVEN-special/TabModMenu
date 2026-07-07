@@ -1,0 +1,23 @@
+{
+    "geode": "3.9.1",
+    "gd": {
+        "win": "2.208",
+        "android": "2.208"
+    },
+    "version": "v1.0.0",
+    "id": "com.yourname.tabmodmenu",
+    "name": "Tab Mod Menu",
+    "developer": "yourname",
+    "description": "A Tab-activated mod menu with ~100 toggleable features and automatic Safe Mode enforcement.",
+    "dependencies": [
+        {
+            "id": "geode.loader",
+            "version": ">=3.9.1"
+        }
+    ],
+    "resources": {
+        "fonts": {},
+        "sprites": [],
+        "sfx": []
+    }
+}
