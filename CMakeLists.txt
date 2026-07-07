@@ -4,7 +4,8 @@ project(TabModMenu)
 
 find_package(Geode REQUIRED)
 
-setup_geode_mod(TabModMenu)
+# The EXTERNALS keyword explicitly stops the compiler from trying to check an online index
+setup_geode_mod(TabModMenu EXTERNALS geode.loader)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
 target_sources(TabModMenu PRIVATE ${SOURCES})
