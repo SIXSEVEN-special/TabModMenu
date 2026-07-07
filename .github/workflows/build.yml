@@ -7,37 +7,42 @@ on:
       - "**"
 
 jobs:
-  build:
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - name: Windows
-            os: windows-latest
-            shell: pwsh
-            sdk_path: "~/.geode/sdk"
-          - name: macOS
-            os: macos-latest
-            shell: bash
-            sdk_path: "~/Library/Application Support/Geode/sdk"
-
-    name: '${{ matrix.config.name }}'
-    runs-on: '${{ matrix.config.os }}'
+  build-windows:
+    name: Windows Build
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      # Installs Geode tools cleanly on both operating systems
       - name: Setup Geode CLI
         uses: geode-sdk/cli/.github/actions/setup@main
 
-      # Feeds the correct path variable straight into CMake without inline scripts
       - name: Configure CMake
         run: |
-          cmake -B build -DCMAKE_PREFIX_PATH="${{ matrix.config.sdk_path }}"
-        shell: '${{ matrix.config.shell }}'
+          cmake -B build -DCMAKE_PREFIX_PATH="~/.geode/sdk"
+        shell: pwsh
 
       - name: Build Mod Binaries
         run: |
           cmake --build build --config Release
-        shell: '${{ matrix.config.shell }}'
+        shell: pwsh
+
+  build-mac:
+    name: macOS Build
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Geode CLI
+        uses: geode-sdk/cli/.github/actions/setup@main
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -DCMAKE_PREFIX_PATH="~/Library/Application Support/Geode/sdk"
+        shell: bash
+
+      - name: Build Mod Binaries
+        run: |
+          cmake --build build --config Release
+        shell: bash
