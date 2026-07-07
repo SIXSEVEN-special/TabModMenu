@@ -23,14 +23,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # This officially handles downloading the CLI and exporting paths automatically
+      # This downloads the CLI and installs the SDK to standard user profile paths
       - name: Setup Geode CLI
         uses: geode-sdk/cli/.github/actions/setup@main
 
-      # Standard clean native CMake building pipeline
+      # Explicitly pointing CMAKE_PREFIX_PATH to the newly installed SDK solves the find_package error
       - name: Configure CMake
         run: |
-          cmake -B build
+          if [ "${ { matrix.config.os }}" = "windows-latest" ]; then
+            cmake -B build -DCMAKE_PREFIX_PATH="${HOME}/.geode/sdk"
+          else
+            cmake -B build -DCMAKE_PREFIX_PATH="${HOME}/Library/Application Support/Geode/sdk"
+          fi
         shell: bash
 
       - name: Build Mod Binaries
