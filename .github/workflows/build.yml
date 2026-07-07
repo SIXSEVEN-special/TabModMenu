@@ -37,7 +37,6 @@ jobs:
         with:
           combine: true
           target: '${{ matrix.config.target }}'
-          sdk: 'v3.8.0'
 
   package:
     name: Package builds
