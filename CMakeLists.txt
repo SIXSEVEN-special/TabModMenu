@@ -16,4 +16,8 @@ endif()
 
 add_subdirectory($ENV{GEODE_SDK} $ENV{GEODE_SDK}/build)
 
-setup_geode_mod(${PROJECT_NAME})
+setup_geode_mod(
+    ${PROJECT_NAME}
+    EXTERNALS geode.loader:>=3.9.1
+)
+
