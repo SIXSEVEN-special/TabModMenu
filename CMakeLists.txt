@@ -1,3 +1,4 @@
+set(GEODE_DONT_FETCH_DEPENDENCIES ON)
 cmake_minimum_required(VERSION 3.21)
 project(TabModMenu VERSION 1.0.0)
 
@@ -16,10 +17,10 @@ endif()
 
 add_subdirectory($ENV{GEODE_SDK} $ENV{GEODE_SDK}/build)
 
-setup_geode_mod(
-    ${PROJECT_NAME}
+setup_geode_mod(${PROJECT_NAME}
     
-)
+ EXTERNALS)
+
 
 
 
