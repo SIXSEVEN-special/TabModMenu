@@ -17,9 +17,10 @@ jobs:
       - name: Setup Geode CLI
         uses: geode-sdk/cli/.github/actions/setup@main
 
+      # Explicitly using $env:USERPROFILE ensures Windows expands the full path inside quotes
       - name: Configure CMake
         run: |
-          cmake -B build -DCMAKE_PREFIX_PATH="~/.geode/sdk"
+          cmake -B build -DCMAKE_PREFIX_PATH="${env:USERPROFILE}/.geode/sdk"
         shell: pwsh
 
       - name: Build Mod Binaries
@@ -37,9 +38,10 @@ jobs:
       - name: Setup Geode CLI
         uses: geode-sdk/cli/.github/actions/setup@main
 
+      # Explicitly using $HOME handles the absolute path expansion perfectly on macOS
       - name: Configure CMake
         run: |
-          cmake -B build -DCMAKE_PREFIX_PATH="~/Library/Application Support/Geode/sdk"
+          cmake -B build -DCMAKE_PREFIX_PATH="${HOME}/Library/Application Support/Geode/sdk"
         shell: bash
 
       - name: Build Mod Binaries
