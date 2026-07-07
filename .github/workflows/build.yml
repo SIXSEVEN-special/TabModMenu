@@ -31,6 +31,7 @@ jobs:
 
     env:
       CMAKE_POLICY_VERSION_MINIMUM: "3.5"
+      GEODE_OFFLINE: "1"
 
     steps:
       - uses: actions/checkout@v4
@@ -54,3 +55,4 @@ jobs:
         with:
           name: Build Output
           path: '${{ steps.build.outputs.build-output }}'
+
