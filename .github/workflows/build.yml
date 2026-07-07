@@ -8,32 +8,32 @@ on:
 
 jobs:
   build:
-    name: Windows Build
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: Windows
+            os: windows-latest
+          - name: macOS
+            os: macos-latest
+
+    name: '${{ matrix.config.name }}'
+    runs-on: '${{ matrix.config.os }}'
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Geode CLI
-        run: |
-          mkdir -Force "${env:USERPROFILE}\.geode\bin"
-          # Download using standard native PowerShell cmdlet without any external wrappers
-          Invoke-WebRequest -Uri "https://github.com/geode-sdk/cli/releases/latest/download/geode-cli-win.zip" -OutFile "geode-cli.zip"
-          Expand-Archive -Path "geode-cli.zip" -DestinationPath "${env:USERPROFILE}\.geode\bin" -Force
-          echo "${env:USERPROFILE}\.geode\bin" >> $env:GITHUB_PATH
-        shell: pwsh
+      # This officially handles downloading the CLI and exporting paths automatically
+      - name: Setup Geode CLI
+        uses: geode-sdk/cli/.github/actions/setup@main
 
-      - name: Install Geode SDK Binaries
-        run: |
-          & "${env:USERPROFILE}\.geode\bin\geode.exe" sdk install
-        shell: pwsh
-
+      # Standard clean native CMake building pipeline
       - name: Configure CMake
         run: |
-          cmake -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH="${env:USERPROFILE}\.geode\sdk"
-        shell: pwsh
+          cmake -B build
+        shell: bash
 
       - name: Build Mod Binaries
         run: |
           cmake --build build --config Release
-        shell: pwsh
+        shell: bash
