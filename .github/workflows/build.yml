@@ -14,8 +14,12 @@ jobs:
         config:
           - name: Windows
             os: windows-latest
+            shell: pwsh
+            sdk_path: "~/.geode/sdk"
           - name: macOS
             os: macos-latest
+            shell: bash
+            sdk_path: "~/Library/Application Support/Geode/sdk"
 
     name: '${{ matrix.config.name }}'
     runs-on: '${{ matrix.config.os }}'
@@ -23,21 +27,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # This downloads the CLI and installs the SDK to standard user profile paths
+      # Installs Geode tools cleanly on both operating systems
       - name: Setup Geode CLI
         uses: geode-sdk/cli/.github/actions/setup@main
 
-      # Explicitly pointing CMAKE_PREFIX_PATH to the newly installed SDK solves the find_package error
+      # Feeds the correct path variable straight into CMake without inline scripts
       - name: Configure CMake
         run: |
-          if [ "${ { matrix.config.os }}" = "windows-latest" ]; then
-            cmake -B build -DCMAKE_PREFIX_PATH="${HOME}/.geode/sdk"
-          else
-            cmake -B build -DCMAKE_PREFIX_PATH="${HOME}/Library/Application Support/Geode/sdk"
-          fi
-        shell: bash
+          cmake -B build -DCMAKE_PREFIX_PATH="${{ matrix.config.sdk_path }}"
+        shell: '${{ matrix.config.shell }}'
 
       - name: Build Mod Binaries
         run: |
           cmake --build build --config Release
-        shell: bash
+        shell: '${{ matrix.config.shell }}'
