@@ -35,15 +35,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Manually set up the official Geode CLI step to avoid dependency checks failing
-      - name: Setup Geode CLI
-        uses: geode-sdk/setup-cli@main
-
       - name: Build the mod
         uses: geode-sdk/build-geode-mod@main
         with:
           combine: true
           target: '${{ matrix.config.target }}'
+          sdk: 'v3.8.0' # Forces the compiler wrapper to pull down the proper runtime framework binaries
 
   package:
     name: Package builds
