@@ -16,19 +16,20 @@ jobs:
 
       - name: Install Geode CLI
         run: |
-          bgexec iwr -Uri "https://github.com/geode-sdk/cli/releases/latest/download/geode-cli-win.zip" -OutFile "geode-cli.zip"
+          mkdir -Force "${env:USERPROFILE}\.geode\bin"
+          # Download using standard native PowerShell cmdlet without any external wrappers
+          Invoke-WebRequest -Uri "https://github.com/geode-sdk/cli/releases/latest/download/geode-cli-win.zip" -OutFile "geode-cli.zip"
           Expand-Archive -Path "geode-cli.zip" -DestinationPath "${env:USERPROFILE}\.geode\bin" -Force
           echo "${env:USERPROFILE}\.geode\bin" >> $env:GITHUB_PATH
         shell: pwsh
 
       - name: Install Geode SDK Binaries
         run: |
-          geode sdk install
+          & "${env:USERPROFILE}\.geode\bin\geode.exe" sdk install
         shell: pwsh
 
       - name: Configure CMake
         run: |
-          # Manually exposing the installation path directly to CMake prevents the module path error
           cmake -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH="${env:USERPROFILE}\.geode\sdk"
         shell: pwsh
 
