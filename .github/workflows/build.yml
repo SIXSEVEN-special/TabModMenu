@@ -26,8 +26,11 @@ jobs:
             os: ubuntu-latest
             target: Android64
 
-    name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
+    name: '${{ matrix.config.name }}'
+    runs-on: '${{ matrix.config.os }}'
+
+    env:
+      CMAKE_POLICY_VERSION_MINIMUM: "3.5"
 
     steps:
       - uses: actions/checkout@v4
@@ -36,8 +39,7 @@ jobs:
         uses: geode-sdk/build-geode-mod@main
         with:
           combine: true
-          target: ${{ matrix.config.target }}
-          cmake-args: "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+          target: '${{ matrix.config.target }}'
 
   package:
     name: Package builds
@@ -51,4 +53,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: Build Output
-          path: ${{ steps.build.outputs.build-output }}
+          path: '${{ steps.build.outputs.build-output }}'
