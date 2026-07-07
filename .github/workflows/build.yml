@@ -40,7 +40,7 @@ jobs:
         with:
           combine: true
           target: '${{ matrix.config.target }}'
-          sdk: 'v3.8.0' # Forces the compiler wrapper to pull down the proper runtime framework binaries
+          sdk: 'v3.8.0'
 
   package:
     name: Package builds
@@ -55,4 +55,3 @@ jobs:
         with:
           name: Build Output
           path: '${{ steps.build.outputs.build-output }}'
-
